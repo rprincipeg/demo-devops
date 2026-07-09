@@ -30,6 +30,10 @@ def listar_tareas():
     """Devuelve la lista completa de tareas en formato JSON."""
     return jsonify(tareas), 200
 
+def test_listar_tareas_vacia():
+    response = client.get('/tareas')
+    assert response.status_code == 200
+
 
 @app.route("/tareas", methods=["POST"])
 def crear_tarea():
