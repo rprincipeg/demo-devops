@@ -4,8 +4,7 @@ Gestor de Tareas (To-Do API)
 
 API REST sencilla construida con Flask que permite crear, listar y eliminar
 tareas. El almacenamiento es en memoria (una lista de Python), por lo que los
-datos se pierden al reiniciar la aplicación. Esto es suficiente para una demo
-del ciclo DevOps y mantiene el código simple y fácil de explicar.
+datos se pierden al reiniciar la aplicación.
 
 Historia de usuario:
     Como usuario quiero crear, listar y eliminar tareas mediante una API REST.
