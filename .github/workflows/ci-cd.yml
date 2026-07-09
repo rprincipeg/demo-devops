@@ -1,11 +1,16 @@
 name: CI-CD
 
+# El pipeline se dispara con cada push a la rama main.
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build-test:
+  # ---------------------------------------------------------------------------
+  # 1. VERIFICAR: instala dependencias y corre las pruebas con pytest.
+  # ---------------------------------------------------------------------------
+  test:
+    name: Pruebas (pytest)
     runs-on: ubuntu-latest
     steps:
       - name: Clonar repositorio
@@ -20,13 +25,50 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Ejecutar pruebas
-        run: pytest
+        run: pytest -v
+
+  # ---------------------------------------------------------------------------
+  # 2. PAQUETE (build): si las pruebas pasan, construye la imagen Docker.
+  # ---------------------------------------------------------------------------
+  build:
+    name: Construir imagen Docker
+    runs-on: ubuntu-latest
+    needs: test  # Solo se ejecuta si el job "test" terminó correctamente.
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
 
       - name: Construir imagen Docker
         run: docker build -t demo-devops:${{ github.sha }} .
 
-      - name: Levantar contenedor y verificar
-        run: |
-          docker run -d -p 5000:5000 --name demo demo-devops:${{ github.sha }}
-          sleep 3
-          curl -f http://localhost:5000/salud
+  # ---------------------------------------------------------------------------
+  # 3. LANZAMIENTO (push): si el build pasa, publica la imagen en GitHub
+  #    Container Registry (ghcr.io) usando el GITHUB_TOKEN automático.
+  # ---------------------------------------------------------------------------
+  push:
+    name: Publicar en GitHub Container Registry
+    runs-on: ubuntu-latest
+    needs: build  # Solo se ejecuta si el job "build" terminó correctamente.
+    permissions:
+      contents: read
+      packages: write  # Necesario para poder subir imágenes a ghcr.io.
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Iniciar sesión en ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}  # Token automático, sin configurar secrets.
+
+      - name: Construir y publicar imagen
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # El nombre del repositorio se pasa a minúsculas (requisito de ghcr.io).
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
