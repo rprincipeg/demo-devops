@@ -11,6 +11,6 @@ services:
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health   # Endpoint de salud para el monitoreo de Render.
     autoDeploy: true       # Cada push a main dispara un nuevo deploy.
-    envVars:
-      - key: PORT          # Puerto que Render inyecta; gunicorn escucha aquí.
-        value: 5000
+    # No definimos PORT manualmente: Render lo inyecta de forma dinámica y
+    # gunicorn escucha en él (ver CMD del Dockerfile). Fijarlo a 5000 aquí
+    # sobreescribía el puerto asignado por la plataforma.
