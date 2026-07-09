@@ -1,0 +1,16 @@
+# Configuración de despliegue en Render (Infrastructure as Code).
+# Documentación: https://render.com/docs/blueprint-spec
+#
+# Despliega la API Flask (Gestor de Tareas) como Web Service usando el
+# Dockerfile existente en la raíz del repositorio.
+services:
+  - type: web              # Servicio web accesible por HTTP.
+    name: gestor-tareas    # Nombre del servicio en Render.
+    env: docker            # Construye a partir del Dockerfile del repo.
+    plan: free             # Plan gratuito.
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health   # Endpoint de salud para el monitoreo de Render.
+    autoDeploy: true       # Cada push a main dispara un nuevo deploy.
+    envVars:
+      - key: PORT          # Puerto que Render inyecta; gunicorn escucha aquí.
+        value: 5000
