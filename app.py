@@ -39,21 +39,21 @@ def test_listar_tareas_vacia():
 
 @app.route("/tareas", methods=["POST"])
 def crear_tarea():
-    """Crea una nueva tarea a partir de un JSON con el campo 'titulo'.
+    """Crea una nueva tarea a partir de un JSON con el campo 'Nombre'.
 
-    Responde 400 si el campo 'titulo' no está presente.
+    Responde 400 si el campo 'NOmbre' no está presente.
     """
     global siguiente_id
 
     datos = request.get_json(silent=True) or {}
 
-    # Validación: el campo 'titulo' es obligatorio.
-    if "titulo" not in datos or not datos["titulo"]:
-        return jsonify({"error": "El campo 'titulo' es obligatorio"}), 400
+    # Validación: el campo 'Nombre' es obligatorio.
+    if "Nombre" not in datos or not datos["Nombre"]:
+        return jsonify({"error": "El campo 'Nombre' es obligatorio"}), 400
 
     tarea = {
         "id": siguiente_id,
-        "titulo": datos["titulo"],
+        "Nombre": datos["Nombre"],
         "completada": False,  # Toda tarea nueva empieza sin completar.
     }
     tareas.append(tarea)
@@ -83,12 +83,13 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port, debug=True)
 
 def test_tarea_creada_tiene_campos_correctos():
-    """Verifica que al crear una tarea, la respuesta incluya id, titulo y completada."""
-    response = client.post('/tareas', json={"titulo": "Preparar presentacion DevOps"})
+    """Verifica que al crear una tarea, la respuesta incluya id, Nombre y completada."""
+    response = client.post('/tareas', json={"Nombre": "Preparar presentacion DevOps"})
     data = response.get_json()
 
     assert response.status_code == 201
     assert "id" in data
-    assert data["titulo"] == "Preparar presentacion DevOps"
+    assert data["Nombre"] == "Preparar presentacion DevOps"
     assert data["completada"] == False
 
+titulo
