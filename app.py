@@ -24,7 +24,7 @@ siguiente_id = 1
 @app.route("/health", methods=["GET"])
 def health():
     """Endpoint de salud usado para el monitoreo (por ejemplo, UptimeRobot)."""
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "bien"}), 200
 
 
 @app.route("/tareas", methods=["GET"])
