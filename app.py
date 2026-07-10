@@ -81,3 +81,14 @@ if __name__ == "__main__":
     # Render inyecta la variable de entorno PORT; si no existe, usamos 5000.
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
+def test_tarea_creada_tiene_campos_correctos():
+    """Verifica que al crear una tarea, la respuesta incluya id, titulo y completada."""
+    response = client.post('/tareas', json={"titulo": "Preparar presentacion DevOps"})
+    data = response.get_json()
+
+    assert response.status_code == 201
+    assert "id" in data
+    assert data["titulo"] == "Preparar presentacion DevOps"
+    assert data["completada"] == False
+
