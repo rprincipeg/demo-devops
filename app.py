@@ -17,7 +17,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 # Almacenamiento en memoria: lista de tareas y un contador para los ids.
-tareas = []
+tareas = hola como estan
 siguiente_id = 1
 
 
