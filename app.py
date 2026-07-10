@@ -17,7 +17,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 # Almacenamiento en memoria: lista de tareas y un contador para los ids.
-tareas = hola como estan
+tareas = []
 siguiente_id = 1
 
 
@@ -92,3 +92,12 @@ def test_tarea_creada_tiene_campos_correctos():
     assert data["Nombre"] == "Preparar presentacion DevOps"
     assert data["completada"] == False
 
+def test_crear_tarea(cliente):
+    """Test 1: crear una tarea correctamente devuelve status 201."""
+    respuesta = cliente.post("/tareas", json={"titulo": "Comprar pan"})
+    assert respuesta.status_code == 201
+
+    datos = respuesta.get_json()
+    assert datos["titulo"] == "Comprar pan"
+    assert datos["completada"] is False
+    assert datos["id"] == 1
