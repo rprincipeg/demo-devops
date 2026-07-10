@@ -92,4 +92,3 @@ def test_tarea_creada_tiene_campos_correctos():
     assert data["Nombre"] == "Preparar presentacion DevOps"
     assert data["completada"] == False
 
-titulo
