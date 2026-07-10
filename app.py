@@ -41,7 +41,7 @@ def test_listar_tareas_vacia():
 def crear_tarea():
     """Crea una nueva tarea a partir de un JSON con el campo 'Nombre'.
 
-    Responde 400 si el campo 'NOmbre' no está presente.
+    Responde 400 si el campo 'Nombre' no está presente.
     """
     global siguiente_id
 
@@ -92,12 +92,3 @@ def test_tarea_creada_tiene_campos_correctos():
     assert data["Nombre"] == "Preparar presentacion DevOps"
     assert data["completada"] == False
 
-def test_crear_tarea(cliente):
-    """Test 1: crear una tarea correctamente devuelve status 201."""
-    respuesta = cliente.post("/tareas", json={"titulo": "Comprar pan"})
-    assert respuesta.status_code == 201
-
-    datos = respuesta.get_json()
-    assert datos["titulo"] == "Comprar pan"
-    assert datos["completada"] is False
-    assert datos["id"] == 1
